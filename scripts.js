@@ -1,5 +1,5 @@
 //gameBoard Module
-var GameBoard = (function() {
+const GameBoard = (function() {
     let grid = [
         ['1','2','3'],
         ['4','5','6'],
@@ -23,8 +23,21 @@ var GameBoard = (function() {
 
 //atm this works like GameBoard.getGrid()[1] for mid row and so on...
 
+//Players Factory
+const Player = (name, mark) => {
+    let victories = 0;
 
-//obj for players (factory)
+    const addVictories = () => {
+        victories += 1;
+    }
+
+    const getVictories = () => {
+        return victories;
+    }
+
+    return { name, mark, addVictories, getVictories };
+}
+
 //controller  - factory
 
 //drawBoard func
