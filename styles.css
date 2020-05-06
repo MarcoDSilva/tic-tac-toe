@@ -1,1 +1,18 @@
 /* css */
+
+.board {
+    border: 1px solid black;
+}
+
+.cell {
+    width:50px;
+    height:50px;
+    border:1px solid rebeccapurple;
+    text-align: center;
+    font-size:33px;
+    color: brown;
+}
+
+.cell:hover {
+    background-color: sandybrown;
+}
