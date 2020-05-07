@@ -1,9 +1,9 @@
 //gameBoard Module
 const GameBoard = (function() {
     let grid = [
-        '1','2','3',
-        '4','5','6',
-        '7','8','9'];
+        ['1','2','3'],
+        ['4','5','6'],
+        ['7','8','9']];
 
     const getGrid = () => {
         return grid;
@@ -16,8 +16,12 @@ const GameBoard = (function() {
     const resetGrid = () => {
         grid = grid.forEach(position => '-');
     }
+
+    const getWinCondition = () => {};
+
+    const getDrawCondition = () => {};
     //public variables
-    return { getGrid, setPlay, resetGrid };
+    return { getGrid, setPlay, resetGrid, getWinCondition, getDrawCondition };
 })();
 
 //atm this works like GameBoard.getGrid()[1] for mid row and so on...
@@ -39,22 +43,39 @@ const Player = (name, mark) => {
 
 //DOM to get the cells and turning the elements onto an array
 const table = document.querySelector('.board');
-const tableGridsHTML = document.querySelectorAll('.cell');
-const cells = [...tableGridsHTML];
 
 function drawBoard() {
-    for (let i = 0; i < 9; i++) {
-        cells[i].innerHTML = GameBoard.getGrid()[i];
+    for (let i = 0; i < 3; i++) {
+        let row = document.createElement('tr');
+        for (let j = 0; j < 3; j++) {
+            const cellToPlay = document.createElement('td');
+            cellToPlay.classList.add('cell');
+            cellToPlay.innerText = GameBoard.getGrid()[i][j];
+            cellToPlay.addEventListener('click', playTest);
+            row.appendChild(cellToPlay);
+        }
+        table.appendChild(row);
     }
 }
-// cells.forEach(btn => btn.innerHTML = GameBoard.getGrid());
 
-//controller  - factory
+var i = 0;
+function playTest() {
+    if(i % 2 === 0) {
+        this.innerHTML = 'X';
+    } else {
+        this.innerHTML = 'O';
+    }
+    i++;
+};
 
-//drawBoard func
+// game controller - Module
+const GameController = (function() {
+
+});
+
+
 //gameLogic
 //scores
-
 //AI moves
 
 drawBoard();
