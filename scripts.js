@@ -31,10 +31,11 @@ const GameBoard = (function () {
 
     const validatePlay = (row, column, marker) => {
         if(grid[row][column] === '') {
-            return false;
+            setPlay(row,column,marker);
+
+            return true;
         } else {
-         setPlay(row,column,marker);
-         return true;
+            return false;
         }
     }
 
@@ -49,16 +50,11 @@ const GameBoard = (function () {
             ['', '', ''],
             ['', '', '']
         ];
-
-        cleanBoard();
         ViewController.drawBoard();
     }
 
     const getWinCondition = () => { };
 
-    const cleanBoard = () => {
-        table.innerHTML = null;
-    }
     //public variables
     return { getGrid, validatePlay, resetGrid, getWinCondition};
 })();
@@ -70,6 +66,8 @@ const ViewController = (function () {
     const table = document.querySelector('.board');
 
     const drawBoard = () => {
+        cleanBoard();
+
         for (let i = 0; i < 3; i++) {
             let row = document.createElement('tr');
             for (let j = 0; j < 3; j++) {
@@ -84,7 +82,11 @@ const ViewController = (function () {
         }
     }
 
-    return {drawBoard}
+    const cleanBoard = () => {
+        table.innerHTML = null;
+    }
+
+    return {drawBoard, cleanBoard}
 
 })();
 
@@ -147,4 +149,4 @@ const GameController = ((name1,name2) => {
 //     i++;
 // }
 
-ViewController.drawBoard();
+GameController.startGame();
