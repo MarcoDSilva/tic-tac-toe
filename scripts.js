@@ -10,32 +10,37 @@ const Player = (name, mark) => {
         return victories;
     }
 
-    return { name, mark, addVictories, getVictories };
-}
+    const getMark = () => {
+        return mark;
+    }
 
-// game controller - Module
-const GameController = (() => {
-    //let gameStart = false;
-    //player names
-    //turns
-    //gamelogic
-    //AI
-})();
+    return { name, getMark, addVictories, getVictories };
+}
 
 //gameBoard Module
 const GameBoard = (function () {
     let grid = [
-        ['1', '2', '3'],
-        ['4', '5', '6'],
-        ['7', '8', '9']
+        ['', '', ''],
+        ['', '', ''],
+        ['', '', '']
     ];
 
     const getGrid = () => {
         return grid;
     };
 
+    const validatePlay = (row, column, marker) => {
+        if(grid[row][column] === '') {
+            return false;
+        } else {
+         setPlay(row,column,marker);
+         return true;
+        }
+    }
+
     const setPlay = (row, column, marker) => {
         grid[row][column] = marker;
+        ViewController.drawBoard();
     }
 
     const resetGrid = () => {
@@ -55,7 +60,7 @@ const GameBoard = (function () {
         table.innerHTML = null;
     }
     //public variables
-    return { getGrid, setPlay, resetGrid, getWinCondition};
+    return { getGrid, validatePlay, resetGrid, getWinCondition};
 })();
 
 const ViewController = (function () {
@@ -69,9 +74,10 @@ const ViewController = (function () {
             let row = document.createElement('tr');
             for (let j = 0; j < 3; j++) {
                 const cellToPlay = document.createElement('td');
-                cellToPlay.classList.add('cell', `[${i}][${j}]`);
+                cellToPlay.classList.add('cell');
+                cellToPlay.id = `${i}-${j}`;
                 cellToPlay.innerText = GameBoard.getGrid()[i][j];
-                cellToPlay.addEventListener('click', playTest);
+                cellToPlay.addEventListener('click', GameController.playerMove);
                 row.appendChild(cellToPlay);
             }
             table.appendChild(row);
@@ -83,15 +89,62 @@ const ViewController = (function () {
 })();
 
 
-let i = 0;
-function playTest() {
-
-    if (i % 2 == 0) {
-        this.innerHTML = 'X'
-    } else {
-        this.innerHTML = 'O'
+// game controller - Module
+const GameController = ((name1,name2) => {
+    let activeGame = false;
+    let p1 = Player(name1, 'X');
+    let p2 = Player(name2, 'O');
+    let playerTurn;
+    let playerWaiting;
+    let turnCheck;
+    //turns
+    //gamelogic
+    const startGame = () => {
+        GameBoard.resetGrid();
+        changePlayerTurn();
     }
-    i++;
-}
+
+    const getPlayerTurn = () => {
+        return playerTurn;
+    }
+
+    const changePlayerTurn = () => {        
+        let turnCheck = Math.round(Math.random() * 100);
+
+        if(turnCheck % 2 === 0) {
+            playerTurn = p1;
+            playerWaiting = p2;
+        } else {
+            playerTurn = p2;
+            playerWaiting = p1;
+        }
+        turnCheck++;
+    }
+
+    const playerMove = (e) => {
+       let rowClm = e.target.id.split('-');
+        if(GameBoard.validatePlay(rowClm[0], rowClm[1], playerTurn.getMark()) === true) {
+            changePlayerTurn();
+            console.log("play done")
+        } else {
+            console.log('invalid play')
+        }
+    }
+
+    return { startGame , playerMove};
+})();
+
+
+//to be removed
+// let i = 0;
+// function playTest() {
+
+//     if (i % 2 == 0) {
+//         this.innerHTML = 'X'
+//     } else {
+//         this.innerHTML = 'O'
+//     }
+//     i++;
+// }
 
 ViewController.drawBoard();
