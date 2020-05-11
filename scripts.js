@@ -30,9 +30,8 @@ const GameBoard = (function () {
     };
 
     const validatePlay = (row, column, marker) => {
-        if(grid[row][column] === '') {
-            setPlay(row,column,marker);
-
+        if (grid[row][column] === '') {
+            setPlay(row, column, marker);
             return true;
         } else {
             return false;
@@ -55,8 +54,7 @@ const GameBoard = (function () {
 
     const getWinCondition = () => { };
 
-    //public variables
-    return { getGrid, validatePlay, resetGrid, getWinCondition};
+    return { getGrid, validatePlay, resetGrid, getWinCondition };
 })();
 
 const ViewController = (function () {
@@ -86,22 +84,23 @@ const ViewController = (function () {
         table.innerHTML = null;
     }
 
-    return {drawBoard, cleanBoard}
+    return { drawBoard, cleanBoard }
 
 })();
 
 
 // game controller - Module
-const GameController = ((name1,name2) => {
+const GameController = ((name1, name2) => {
     let activeGame = false;
     let p1 = Player(name1, 'X');
     let p2 = Player(name2, 'O');
     let playerTurn;
     let playerWaiting;
     let turnCheck;
-    //turns
-    //gamelogic
+
+
     const startGame = () => {
+        turnCheck = Math.round(Math.random() * 100);
         GameBoard.resetGrid();
         changePlayerTurn();
     }
@@ -110,10 +109,8 @@ const GameController = ((name1,name2) => {
         return playerTurn;
     }
 
-    const changePlayerTurn = () => {        
-        let turnCheck = Math.round(Math.random() * 100);
-
-        if(turnCheck % 2 === 0) {
+    const changePlayerTurn = () => {
+        if (turnCheck % 2 === 0) {
             playerTurn = p1;
             playerWaiting = p2;
         } else {
@@ -124,8 +121,9 @@ const GameController = ((name1,name2) => {
     }
 
     const playerMove = (e) => {
-       let rowClm = e.target.id.split('-');
-        if(GameBoard.validatePlay(rowClm[0], rowClm[1], playerTurn.getMark()) === true) {
+        let rowClm = e.target.id.split('-');
+
+        if (GameBoard.validatePlay(rowClm[0], rowClm[1], getPlayerTurn().getMark()) === true) {
             changePlayerTurn();
             console.log("play done")
         } else {
@@ -133,20 +131,13 @@ const GameController = ((name1,name2) => {
         }
     }
 
-    return { startGame , playerMove};
+    return { startGame, playerMove };
 })();
 
-
-//to be removed
-// let i = 0;
-// function playTest() {
-
-//     if (i % 2 == 0) {
-//         this.innerHTML = 'X'
-//     } else {
-//         this.innerHTML = 'O'
-//     }
-//     i++;
-// }
-
 GameController.startGame();
+
+//todo
+//make the plays get winner or draw
+//lock the game when it's over
+//present names and scores
+//ai
